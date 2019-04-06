@@ -1,5 +1,6 @@
 package proj4;
 
+import javax.swing.*;
 import java.io.*;
 import java.util.Hashtable;
 import java.util.Scanner;
@@ -12,6 +13,8 @@ public class Mix {
 
 	private String userMessage;
 	private Scanner scan;
+
+	private JPanel pane = new JPanel();
 
 	public Mix() {
 		scan = new Scanner(System.in);
@@ -30,16 +33,15 @@ public class Mix {
 
 
 	private void mixture() {
+		for(int i = 0; i < userMessage.length(); i++)
+			message.addToBottom(userMessage.charAt(i));
 		do {
-			System.out.print("Command: ");
-
 			// save state
-			DoubleLinkedList<Character> currMessage =  new DoubleLinkedList<>();
-
-			for(int i = 0; i < userMessage.length(); i++)
-				message.addToBottom(userMessage.charAt(i));
+			DoubleLinkedList<Character> currMessage = message;
 
 			DisplayMessage();
+
+			System.out.println("Command: ");
 
 			String currUndoCommands = undoCommands;
 
@@ -49,7 +51,7 @@ public class Mix {
 				switch (command) {
 				case "Q":
 					save(scan.next());
-					System.out.println ("Final mixed up message: \"" + message+"\"");
+					System.out.println ("Final mixed up message: \"" + message + "\"");
 					System.exit(0);
 				case "b":
 					insertbefore(scan.next(), scan.nextInt());
@@ -88,8 +90,28 @@ public class Mix {
 		} while (true);
 	}
 
+	/******************************************************************
+	 * @param start An index of the position to start deleting at
+	 * @param stop An index of the position to stop deleting at
+	 * A method to remove part of the message from a starting index
+	 * to an stop index
+	 *****************************************************************/
 	private void remove(int start, int stop) {
+		char remove;
+		if (start < 0 || start > stop
+				|| stop > message.getListLength()
+				|| start > message.getListLength())
+			JOptionPane.showMessageDialog(pane, "Invalid command");
+		else
+			for(int i = stop; i >= start; i--) {
+				remove = message.remove(i);
+				setUndoCommands("a " + remove + " " + i);
+			}
 
+	}
+
+	private void setUndoCommands(String command){
+		undoCommands = undoCommands + command + "\n";
 	}
 
 	private void cut(int start, int stop, int clipNum) {
