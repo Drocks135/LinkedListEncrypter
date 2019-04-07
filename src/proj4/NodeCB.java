@@ -12,7 +12,7 @@ public class NodeCB {
     }
 
     public NodeCB getNext(){
-        return next;
+         return next;
     }
 
     public void setNext(NodeCB next){

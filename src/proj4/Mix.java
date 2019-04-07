@@ -114,7 +114,8 @@ public class Mix {
 	}
 
 	private void cut(int start, int stop, int clipNum) {
-
+		copy(start, stop, clipNum);
+		remove(start, stop);
 	}
 
 	private void copy(int start, int stop, int clipNum) {
@@ -134,7 +135,8 @@ public class Mix {
 	}
 
 	private void paste( int index, int clipNum) {
-
+		String s = clipBoards.cbToString(clipNum);
+		insertbefore(s, index);
 	}
          
 	private void insertbefore(String token, int index) {
@@ -144,7 +146,7 @@ public class Mix {
 		} else {
 			for (int i = c.length - 1; i >= 0; i--) {
 				message.insertBefore(c[i], index);
-				setUndoCommands("r " + c[i] + " " + index);
+				setUndoCommands("r " + index);
 			}
 		}
 	}
@@ -175,8 +177,10 @@ public class Mix {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		String lines[] = undoCommands.split("\\r?\\n");
+		for(int i = lines.length - 1; i >= 0; i--)
+			out.println(lines[i]);
 
-		out.println(undoCommands);
 		out.close();
 	}
 

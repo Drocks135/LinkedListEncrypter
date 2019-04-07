@@ -16,13 +16,19 @@ public class UnMix {
 
 	public String processCommand(String command) {
 		Scanner scan = new Scanner(command);
+
 		char charInput;
 
 		try {
 			command = scan.next();
 			switch (command.charAt(0)) {
+				case 'a':
 
-			// put undo commands here
+					break;
+				case 'r':
+
+					break;
+
 			}
 		} catch (Exception e) {
 			System.out.println("Error in command!  Problem!!!! in undo commands");

@@ -8,7 +8,7 @@ public class clipBdLinkedList {
         tail = top = null;
     }
 
-    public void addClipBoard(int clipBoardNumber, NodeD topOfClipBoard){
+    public void addClipBoard(int clipBoardNumber, NodeD topOfClipBoard) {
         //Case 0: no list
         if (top == null) {
             top = new NodeCB(clipBoardNumber, null, topOfClipBoard);
@@ -17,16 +17,20 @@ public class clipBdLinkedList {
             boolean foundClipBoard = false;
             NodeCB temp = top;
             //Case 1: Clipboard number exists
-            do {
-                if(clipBoardNumber == temp.getClipBoardNumber()) {
+            while (temp != null)
+                if (clipBoardNumber == temp.getClipBoardNumber()) {
                     temp.setTopOfClipBoard(topOfClipBoard);
                     foundClipBoard = true;
-                }
-                temp = temp.getNext();
-            } while(temp.getNext() != null);
+                } else
+                    temp = temp.getNext();
+
 
             //Case 2: Clipboard number does not exist
-            if(!foundClipBoard){
+            temp = top;
+            while(temp.getNext() != null)
+                temp = temp.getNext();
+
+            if (!foundClipBoard) {
                 NodeCB temp2 = new NodeCB(clipBoardNumber, null, topOfClipBoard);
                 temp.setNext(temp2);
                 tail = temp2;
@@ -34,4 +38,23 @@ public class clipBdLinkedList {
         }
     }
 
-}
+    public String cbToString(int clipBoardNumber) {
+        NodeCB temp = top;
+        String retVal = "";
+        NodeD cur;
+
+            while (temp != null) {
+                if (temp.getClipBoardNumber() == clipBoardNumber) {
+                    cur = temp.getTopOfClipBoard();
+                    while (cur != null) {
+                        retVal += cur.getData();
+                        cur = cur.getNext();
+                    }
+                }
+                    temp = temp.getNext();
+            }
+            return retVal;
+        }
+    }
+
+
