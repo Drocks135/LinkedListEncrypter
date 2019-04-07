@@ -5,7 +5,18 @@ public class NodeCB {
     private NodeD<Character> topOfClipBoard;
     private NodeCB next;
 
-    public NodeCB() {
+    public NodeCB(int clipBoardNumber, NodeCB next, NodeD topOfClipBoard) {
+        this.clipBoardNumber = clipBoardNumber;
+        this.next = next;
+        this.topOfClipBoard = topOfClipBoard;
+    }
+
+    public NodeCB getNext(){
+        return next;
+    }
+
+    public void setNext(NodeCB next){
+        this.next = next;
     }
 
     public int getClipBoardNumber() {

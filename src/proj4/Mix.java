@@ -2,14 +2,13 @@ package proj4;
 
 import javax.swing.*;
 import java.io.*;
-import java.util.Hashtable;
 import java.util.Scanner;
 
 public class Mix {
 
 	private DoubleLinkedList<Character> message;
 	private String undoCommands;
-	private Hashtable<Integer, DoubleLinkedList<Character>> clipBoards;
+	private clipBdLinkedList clipBoards;
 
 	private String userMessage;
 	private Scanner scan;
@@ -19,7 +18,7 @@ public class Mix {
 	public Mix() {
 		scan = new Scanner(System.in);
 		message = new DoubleLinkedList<Character>();
-		clipBoards = new Hashtable<Integer, DoubleLinkedList<Character>>();
+		clipBoards = new clipBdLinkedList();
 
 		undoCommands = "";
 	}
@@ -119,7 +118,19 @@ public class Mix {
 	}
 
 	private void copy(int start, int stop, int clipNum) {
+		if (start < 0 || start > stop
+				|| stop > message.getListLength()
+				|| start > message.getListLength()) {
+			JOptionPane.showMessageDialog(pane, "Invalid command");
+		} else {
+			DoubleLinkedList temp = new DoubleLinkedList();
+			String s = message.getSection(start, stop);
+			char[] c = s.toCharArray();
+			for (int i = 0; i < c.length; i++)
+				temp.addToBottom(c[i]);
 
+			clipBoards.addClipBoard(clipNum, temp.getTop());
+		}
 	}
 
 	private void paste( int index, int clipNum) {
@@ -127,8 +138,19 @@ public class Mix {
 	}
          
 	private void insertbefore(String token, int index) {
-
+		char c[] = token.toCharArray();
+		if (index < 0 || index > message.getListLength()) {
+			JOptionPane.showMessageDialog(pane, "Invalid command");
+		} else {
+			for (int i = c.length - 1; i >= 0; i--) {
+				message.insertBefore(c[i], index);
+				setUndoCommands("r " + c[i] + " " + index);
+			}
+		}
 	}
+
+
+
 
 	private void DisplayMessage() {
 		System.out.print ("Message:\n");
@@ -140,6 +162,8 @@ public class Mix {
 		for (char c : userMessage.toCharArray()) 
 			System.out.format("%3c",c);
 		System.out.format ("\n");
+
+		System.out.println(message.toBackString());
 	}
 
 	public void save(String filename) {
