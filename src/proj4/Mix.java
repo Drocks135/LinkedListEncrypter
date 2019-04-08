@@ -3,6 +3,8 @@ package proj4;
 import javax.swing.*;
 import java.io.*;
 import java.util.Scanner;
+import java.util.Random;
+import java.util.Stack;
 
 public class Mix {
 
@@ -45,31 +47,40 @@ public class Mix {
 			String currUndoCommands = undoCommands;
 
 			try {
-				String command = scan.next("[Qbrpcxh]");
+				String command = scan.next("[Qbrpcxhzed]");
 
 				switch (command) {
-				case "Q":
-					save(scan.next());
-					System.out.println ("Final mixed up message: \"" + message + "\"");
-					System.exit(0);
-				case "b":
-					insertbefore(scan.next(), scan.nextInt());
-					break;
-				case "r":
-					remove(scan.nextInt(), scan.nextInt());
-					break;
-				case "c":
-					copy(scan.nextInt(), scan.nextInt(), scan.nextInt());
-					break;
-				case "x":
-					cut(scan.nextInt(), scan.nextInt(), scan.nextInt());
-					break;
-				case "p":
-					paste(scan.nextInt(), scan.nextInt());
-					break;
-				case "h":
-					helpPage();
-					break;
+					case "Q":
+						save(scan.next());
+						System.out.println ("Final mixed up message: \"" + message + "\"");
+						System.exit(0);
+					case "b":
+						insertbefore(scan.next(), scan.nextInt());
+						break;
+					case "r":
+						remove(scan.nextInt(), scan.nextInt());
+						break;
+					case "c":
+						copy(scan.nextInt(), scan.nextInt(), scan.nextInt());
+						break;
+					case "x":
+						cut(scan.nextInt(), scan.nextInt(), scan.nextInt());
+						break;
+					case "p":
+						paste(scan.nextInt(), scan.nextInt());
+						break;
+					case "e":
+						replace(scan.next(), scan.next());
+						break;
+					case "h":
+						helpPage();
+						break;
+					case "d":
+						removeChar(scan.next());
+						break;
+					case "z":
+						rngMix(scan.nextInt());
+						break;
 
 					// all the rest of the commands have not been done
                     // No "real" error checking has been done.
@@ -107,6 +118,42 @@ public class Mix {
 				setUndoCommands("a " + remove + " " + i);
 			}
 
+	}
+
+	/******************************************************************
+	 * @param sOld The old character that will be replaced
+	 * @param sNew The replacement for the old character
+	 * This method replaces all of one character with another
+	 *****************************************************************/
+	private void replace(String sOld, String sNew){
+		if (sOld.length() > 1 || sNew.length() > 1)
+			JOptionPane.showMessageDialog(pane, "Invalid command");
+		else {
+			char old = sOld.charAt(0);
+			char c = sNew.charAt(0);
+
+			message.replace(old, c);
+			setUndoCommands("e " + c + " " + old);
+		}
+	}
+
+	/******************************************************************
+	 * @param s A character to be removed
+	 * Removes all instances of a character in the message
+	 *****************************************************************/
+	private void removeChar(String s){
+		if(s.length() > 1) {
+			JOptionPane.showMessageDialog(pane, "Invalid command");
+		} else {
+			char c = s.charAt(0);
+			Stack indexStack = message.getIndexOfChar(c);
+			int index;
+
+			while(!indexStack.isEmpty()) {
+				index = (int) indexStack.pop();
+				remove(index, index);
+			}
+		}
 	}
 
 	private void setUndoCommands(String command){
@@ -151,6 +198,45 @@ public class Mix {
 		}
 	}
 
+	public void rngMix(int loop){
+		Random rand = new Random();
+		int n;
+		char c;
+		for (int i = 0; i < loop; i++){
+			n = rand.nextInt(3);
+			switch (n){
+				case 0:
+					insertbefore(randChar() + "",
+							rand.nextInt(message.getListLength()));
+					break;
+				case 1:
+					n = rand.nextInt(message.getListLength());
+					remove(n, n);
+					break;
+				case 2:
+					n = rand.nextInt(message.getListLength());
+					c = message.get(n);
+					removeChar("c");
+					break;
+				case 3:
+					n = rand.nextInt(message.getListLength());
+					c = message.get(n);
+					replace("", randChar() + "");
+					break;
+			}
+		}
+
+	}
+
+	/******************************************************************
+	 * A method to return a random character
+	 * @return a character
+	 *****************************************************************/
+	public char randChar(){
+		String alphabet = "abcdefghijklmnopqrztuvwxyz";
+		Random rand = new Random();
+		return alphabet.charAt(rand.nextInt(26));
+	}
 
 
 

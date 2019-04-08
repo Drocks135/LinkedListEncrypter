@@ -1,6 +1,8 @@
 package proj4;
 
 
+import java.util.Stack;
+
 public class DoubleLinkedList<E>  {
 	protected NodeD<E> top;      // The first NodeD<E> in the list
     // This instance variable is not required, however if you
@@ -131,6 +133,41 @@ public class DoubleLinkedList<E>  {
 			listLength--;
 		}
 		return c;
+	}
+
+	/******************************************************************
+	 * @param old The old character that will be replaced
+	 * @param c The replacement for the old character
+	 * This method replaces all of one character with another
+	 *****************************************************************/
+	public void replace(char old, char c){
+		NodeD temp = top;
+		while (temp != null){
+			if ((char)temp.getData() == old){
+				temp.setData(c);
+			}
+			temp = temp.getNext();
+		}
+	}
+
+	/******************************************************************
+	 * @param c A character to search for
+	 * @return A stack with the indexes of all occurrences of c
+	 * Searches the linked list for all occurrences of a character and
+	 * saves their index to a stack.
+	 *****************************************************************/
+	public Stack getIndexOfChar(char c){
+		NodeD temp = top;
+		int index = 0;
+		Stack indexStack = new Stack();
+		while(temp != null){
+			if ((char)temp.getData() == c){
+				indexStack.push(index);
+			}
+			temp = temp.getNext();
+			index++;
+		}
+		return indexStack;
 	}
 
 	public int getListLength(){

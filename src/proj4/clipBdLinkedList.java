@@ -17,7 +17,7 @@ public class clipBdLinkedList {
             boolean foundClipBoard = false;
             NodeCB temp = top;
             //Case 1: Clipboard number exists
-            while (temp != null)
+            while (temp != null && !foundClipBoard)
                 if (clipBoardNumber == temp.getClipBoardNumber()) {
                     temp.setTopOfClipBoard(topOfClipBoard);
                     foundClipBoard = true;

@@ -14,19 +14,25 @@ public class UnMix {
 		v.unMixture(args[0], args[1]);
 	}
 
-	public String processCommand(String command) {
+	public void processCommand(String command) {
 		Scanner scan = new Scanner(command);
-
-		char charInput;
+		String[] split;
 
 		try {
-			command = scan.next();
 			switch (command.charAt(0)) {
 				case 'a':
-
+					split = command.split("\\s+");
+					if(split.length == 2)
+						message.insertBefore(command.charAt(2), Integer.parseInt(split[1]));
+					else
+						message.insertBefore(split[1].charAt(0), Integer.parseInt(split[2]));
 					break;
 				case 'r':
-
+					split = command.split("\\s+");
+					message.remove(Integer.parseInt(split[1]));
+					break;
+				case 'e':
+					message.replace(command.charAt(2), command.charAt(4));
 					break;
 
 			}
@@ -38,10 +44,11 @@ public class UnMix {
 			scan.close();
 		}
 
-		return message.toString();
 	}
 
 	private void unMixture(String filename, String userMessage) {
+		for(int i = 0; i < userMessage.length(); i++)
+			message.addToBottom(userMessage.charAt(i));
 		String original = UnMixUsingFile (filename, userMessage);
 		System.out.println ("The Original message was: " + original);
 	}
@@ -57,8 +64,8 @@ public class UnMix {
 
 		while (scanner.hasNext()) {
 			String command = scanner.nextLine();
-			userMessage = processCommand(command);
+			processCommand(command);
 		} 
-		return userMessage;
+		return message.toString();
 	}
 }
